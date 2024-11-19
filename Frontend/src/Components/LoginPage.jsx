@@ -31,9 +31,6 @@ function LoginPage( {onLogin} ) {
       localStorage.setItem("chatHistory", JSON.stringify(parsedUserData.chatHistory))
       localStorage.setItem("conversationData", '[]')
       console.log(localStorage)
-      // console
-      // FIXME : Add username to chatheader
-      const username = parsedUserData.username;
       localStorage.setItem("username", parsedUserData.username);
       navigate('/main');
       console.log(localStorage.getItem("username"))
