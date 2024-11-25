@@ -109,9 +109,10 @@ export const LANDING_PAGE_TEXT = {
 
 
 export const CHAT_API = process.env.REACT_APP_CHAT_API; // URL for the chat API endpoint
-export const WEBSOCKET_API = 'wss://b21w3jq2ld.execute-api.us-east-1.amazonaws.com/production/'; // URL for the WebSocket API endpoint
-export const API_URL = 'https://z5s1s8rp0d.execute-api.us-east-1.amazonaws.com/dev1'
-export const BEDROCK_API_URL = 'https://z5s1s8rp0d.execute-api.us-east-1.amazonaws.com/dev2/Bedrock_api'
+// export const WEBSOCKET_API = 'wss://b21w3jq2ld.execute-api.us-east-1.amazonaws.com/production/';
+export const WEBSOCKET_API = process.env.REACT_APP_WEBSOCKET_API; // URL for the WebSocket API endpoint
+// export const API_URL = 'https://z5s1s8rp0d.execute-api.us-east-1.amazonaws.com/dev1'
+export const API_URL = process.env.REACT_APP_API_URL;
 
 // --------------------------------------------------------------------------------------------------------//
 // --------------------------------------------------------------------------------------------------------//
