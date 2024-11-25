@@ -11,7 +11,7 @@ import { useCookies } from "react-cookie";
 import { TranscriptProvider } from './utilities/TranscriptContext';
 import LoginPage from "./Components/LoginPage";
 import SignUpPage from "./Components/SignUpPage";
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Amplify } from "aws-amplify";
 import { signOut } from 'aws-amplify/auth';
 
@@ -147,6 +147,7 @@ function App() {
           <ThemeProvider theme={theme}>
           
         <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
           {/* Define routes for each page */}
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/signup" element={<SignUpPage />} />

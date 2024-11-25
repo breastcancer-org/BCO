@@ -56,7 +56,7 @@ export class CdkStack extends cdk.Stack {
           phases: {
             preBuild: {
               commands: [
-                'cd frontend',
+                'cd Frontend',
                 'npm ci'
               ]
             },
@@ -67,14 +67,14 @@ export class CdkStack extends cdk.Stack {
             }
           },
           artifacts: {
-            baseDirectory: 'frontend/build',
+            baseDirectory: 'Frontend/build',
             files: [
               '**/*'
             ]
           },
           cache: {
             paths: [
-              'frontend/node_modules/**/*'
+              'Frontend/node_modules/**/*'
             ]
           }
         }
@@ -235,7 +235,7 @@ export class CdkStack extends cdk.Stack {
 
     amplifyApp.addEnvironment('REACT_APP_WEBSOCKET_API', webSocketStage.url);
     amplifyApp.addEnvironment('REACT_APP_API_URL', restApi.url);
-
+    // amplifyApp.addEnvironment('REACT_APP_HOMEPAGE', amplifyApp.defaultDomain);
     // Output User Pool ID and Client ID
     new cdk.CfnOutput(this, 'UserPoolId', {
       value: userPool.userPoolId,
@@ -245,5 +245,8 @@ export class CdkStack extends cdk.Stack {
       value: userPoolClient.userPoolClientId,
     });
     
+    new cdk.CfnOutput(this, 'AmplifyAppDomain',{
+      value: amplifyApp.defaultDomain
+    });
   }
 }
