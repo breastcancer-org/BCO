@@ -95,12 +95,14 @@ function App() {
     Auth: {
       Cognito: {
         region: "us-east-1", // Your Cognito User Pool region
-        userPoolId: "us-east-1_NOMiG9b8p", // Your Cognito User Pool ID
-        userPoolClientId: "18uj8tqdjpou8r5p6dh5mtv5np", // Your App Client ID
-        // identityPoolId: "us-west-2:f5d16473-a78f-4636-bcc5-6c3f483c3423", // Optional: Identity Pool ID if using Federated Identities
+        // userPoolId: "us-east-1_NOMiG9b8p",
+        userPoolId: process.env.REACT_APP_USER_POOL_ID, // Your Cognito User Pool ID
+        // userPoolClientId: "18uj8tqdjpou8r5p6dh5mtv5np",
+        userPoolClientId: process.env.REACT_APP_USER_POOL_CLIENT_ID, // Your App Client ID
         loginWith: {
           oauth: {
-            domain: 'https://bco-v3.auth.us-east-1.amazoncognito.com',
+            // domain: 'https://bco-v3.auth.us-east-1.amazoncognito.com',
+            domain: process.env.REACT_APP_COGNITO_DOMAIN,
             scopes: ['email','gender','aws.cognito.signin.user.admin'],
             redirectSignIn: ['http://localhost:3000/','https://example.com/'],
             redirectSignOut: ['http://localhost:3000/','https://example.com/'],

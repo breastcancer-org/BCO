@@ -185,6 +185,12 @@ export class CdkStack extends cdk.Stack {
       },
     });
 
+    const UserPoolDomain = userPool.addDomain('UserPoolDomain', {
+      cognitoDomain: {
+        domainPrefix: 'bco-user-pool'
+      }
+    });
+
     // Add a User Pool Client
     const userPoolClient = new cognito.UserPoolClient(this, 'UserPoolClient', {
       userPool,
@@ -205,13 +211,27 @@ export class CdkStack extends cdk.Stack {
 
     // Define REST API routes (e.g., /items)
     const items = restApi.root.addResource('items');
-    // items.addMethod('GET');  // GET /items
-    items.addMethod('POST'); // POST /items
-    items.defaultCorsPreflightOptions;
+    restApi.root.addMethod('PUT', new apigateway.LambdaIntegration(chatHistoryLambda, {
+      proxy: false, // Enable proxy integration
+      integrationResponses: [{
+        statusCode: '200',
+        responseParameters: {
+          'method.response.header.Access-Control-Allow-Origin': "'*'"
+        },
+      }],
+    }), {
+      methodResponses: [{
+        statusCode: '200',
+        responseParameters: {
+          'method.response.header.Access-Control-Allow-Origin': true
+        },
+        responseModels: {
+          'application/json': apigateway.Model.EMPTY_MODEL,
+        },
+      }],
+    })
 
-    // const singleItem = items.addResource('{id}'); // e.g., /items/{id}
-    // singleItem.addMethod('GET');  // GET /items/{id}
-    // singleItem.addMethod('DELETE');  // DELETE /items/{id}
+    items.defaultCorsPreflightOptions;
 
     // Define a WebSocket API Gateway and link it to the WebSocket Lambda function
     const webSocketApi = new apigatewayv2.WebSocketApi(this, 'WebSocketApi', {
@@ -233,8 +253,13 @@ export class CdkStack extends cdk.Stack {
       }
     );
 
+    const cognitoDomainUrl = `https://${UserPoolDomain.domainName}.auth.${cdk.Aws.REGION}.amazoncognito.com`;
+
     amplifyApp.addEnvironment('REACT_APP_WEBSOCKET_API', webSocketStage.url);
     amplifyApp.addEnvironment('REACT_APP_API_URL', restApi.url);
+    amplifyApp.addEnvironment('REACT_APP_USER_POOL_ID', userPool.userPoolId);
+    amplifyApp.addEnvironment('REACT_APP_USER_POOL_CLIENT_ID', userPoolClient.userPoolClientId);
+    amplifyApp.addEnvironment('REACT_APP_COGNITO_DOMAIN', cognitoDomainUrl);
     // amplifyApp.addEnvironment('REACT_APP_HOMEPAGE', amplifyApp.defaultDomain);
     // Output User Pool ID and Client ID
     new cdk.CfnOutput(this, 'UserPoolId', {
@@ -243,6 +268,10 @@ export class CdkStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'UserPoolClientId', {
       value: userPoolClient.userPoolClientId,
+    });
+
+    new cdk.CfnOutput(this, 'cognitoDomain', {
+      value: `https://${userPool.userPoolId}.auth.${this.region}.amazoncognito.com`
     });
     
     new cdk.CfnOutput(this, 'AmplifyAppDomain',{
