@@ -9,8 +9,6 @@ logging.basicConfig(level=logging.INFO)
 
 bedrock_runtime = boto3.client(service_name='bedrock-runtime')
 
-# TODO: Implement get from dynamoDB or use local chat history
-
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ.get('TABLE_NAME'))
 S3_BUCKET_NAME = 'bco_bedrock_logs'
@@ -125,9 +123,6 @@ class BCO_API:
             print({"role": "user", "content": f"{self.UserMessage}"})
             # Prompt with user turn only.
             print(self.ChatHistory[-1])
-            # self.ChatHistory.append({"role": "user", "content": f"{self.UserMessage}"})
-            # user_message = self.ChatHistory[-2]
-            # print(user_message)
             messages = self.ChatHistory
     
             response = self.generate_message(bedrock_runtime, model_id, self.Prompt, messages, max_tokens)
@@ -149,7 +144,6 @@ def lambda_handler(event, context):
     print(event)
     print(context)
     # json_obj = json.loads(event)
-    # print
     if event['requestContext']['routeKey'] != 'sendMessage':
         return {
             'statusCode': 200,
@@ -157,16 +151,11 @@ def lambda_handler(event, context):
         }
     else:
         json_obj = json.loads(event['body'])
-        # return {
-        #     'statusCode': 200,
-        #     'body': f"{json_obj}"
-        # }
         api_object = BCO_API(json_obj)
         
         response = api_object.main()
         # return response['content'][0]['text']
         event["chatHistory"] = api_object.ChatHistory
-        # return event["chatHistory"][-1]
         #Updates Table with latest Chat History
         table.update_item(
             Key={

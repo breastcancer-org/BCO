@@ -1,7 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
-// import * as amplify from '@aws-cdk-lib/aws-amplify-alpha';
 import * as amplify from '@aws-cdk/aws-amplify-alpha';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -21,25 +19,13 @@ export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: CdkstackProps) {
     super(scope, id, props); 
 
-    // const githubTokenParameter = new cdk.CfnParameter(this, 'GitHubTokenParameter', {
-    //   type: 'String', // The type of parameter (String, Number, etc.)
-    //   description: 'GitHub Personal Access Token for Amplify'
-    // });
-
-    // const githubssmTokenParameter = new ssm.StringParameter(this, 'GitHub_TokenParameter', {
-    //   parameterName: 'ssm-github-token',
-    //   stringValue: githubTokenParameter.valueAsString,
-    //   description: 'GitHub Personal Access Token for Amplify',
-    //   tier: ssm.ParameterTier.STANDARD
-    // });
-
     const githubToken = new secretsmanager.Secret(this, 'GitHubToken', {
       secretName: 'github-token',
       description: 'GitHub Personal Access Token for Amplify',
       secretStringValue: cdk.SecretValue.unsafePlainText(props.githubToken)
     });
 
-    const amplifyApp = new amplify.App(this, 'amplify-app', {
+    const amplifyApp = new amplify.App(this, 'bco-amplify-app', {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
         owner: 'ASUCICREPO',
         repository: 'BCO',
@@ -262,7 +248,7 @@ export class CdkStack extends cdk.Stack {
     amplifyApp.addEnvironment('REACT_APP_USER_POOL_ID', userPool.userPoolId);
     amplifyApp.addEnvironment('REACT_APP_USER_POOL_CLIENT_ID', userPoolClient.userPoolClientId);
     amplifyApp.addEnvironment('REACT_APP_COGNITO_DOMAIN', cognitoDomainUrl);
-    // amplifyApp.addEnvironment('REACT_APP_HOMEPAGE', amplifyApp.defaultDomain);
+
     // Output User Pool ID and Client ID
     new cdk.CfnOutput(this, 'UserPoolId', {
       value: userPool.userPoolId,
