@@ -1,9 +1,10 @@
 import json
 import boto3
+import os
 
 # Initialize the DynamoDB client
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('BCO_users')  # Replace 'Users' with your table name
+table = dynamodb.Table(os.environ.get('TABLE_NAME'))  # Replace 'Users' with your table name
 
 def lambda_handler(event, context):
     body = event

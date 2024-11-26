@@ -2,6 +2,7 @@ import boto3
 import json
 import logging
 from botocore.exceptions import ClientError
+import os
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -11,7 +12,7 @@ bedrock_runtime = boto3.client(service_name='bedrock-runtime')
 # TODO: Implement get from dynamoDB or use local chat history
 
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('BCO_users')
+table = dynamodb.Table(os.environ.get('TABLE_NAME'))
 S3_BUCKET_NAME = 'bco_bedrock_logs'
 
 class BCO_API:
@@ -167,16 +168,16 @@ def lambda_handler(event, context):
         event["chatHistory"] = api_object.ChatHistory
         # return event["chatHistory"][-1]
         #Updates Table with latest Chat History
-        # table.update_item(
-        #     Key={
-        #         'email': self.Email
-        #     },
-        #     UpdateExpression="SET chatHistory = :newchatHistory"
-        #     ExpressionAttributeValues={
-        #         ':newchatHistory': "self.ChatHistory"
-        #     },
-        #     ReturnValues='ALL_NEW'
-        #     )
+        table.update_item(
+            Key={
+                'email': json_obj.get('email')
+            },
+            UpdateExpression="SET chatHistory = :newchatHistory",
+            ExpressionAttributeValues={
+                ':newchatHistory': event["chatHistory"]
+            },
+            ReturnValues='ALL_NEW'
+            )
         
         return {
             'statusCode': 200,

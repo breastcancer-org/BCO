@@ -118,6 +118,7 @@ export class CdkStack extends cdk.Stack {
       environment: {
         TABLE_NAME: table.tableName, // Pass the DynamoDB table name to the Lambda function
       },
+      timeout: cdk.Duration.seconds(60),
     });
     bedrockLambda.addToRolePolicy(
       new iam.PolicyStatement({
@@ -249,7 +250,8 @@ export class CdkStack extends cdk.Stack {
     webSocketApi.addRoute('sendMessage', 
       {
         integration: new apigatewayv2integrations.WebSocketLambdaIntegration('SendMessageIntegration', bedrockLambda),
-        returnResponse: true
+        returnResponse: true,
+
       }
     );
 
