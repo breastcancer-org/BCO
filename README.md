@@ -1,45 +1,84 @@
-# Breast Cancer Organization Chatbot Repo
-# Prerequisites 
+# Breast Cancer Organization Chatbot Repository
 
-aws-cli version == 2.15.41
+Welcome to the **Breast Cancer Organization (BCO) Chatbot** repository! This guide will walk you through the process of setting up and deploying the project using AWS CDK.
 
-cdk version == 2.170.0
+## ⚙️ Prerequisites
 
-# Initial Instructions
+Ensure that the following tools are installed before proceeding:
 
-- Fork the Repo
-- Go to Settings in Github
-- Go to Developer Settings
-- Click on Personal Access Tokens
-- Choose 'Tokens (classic)'
-- Choose generate Token (classic)
-- Add a note such as 'BCO_Chatbot'
-- Choose the Token Expiration period
-- Choose the following options: Repo, repo_hook
-- Generate Token and store it
+- **AWS CLI**: version `2.15.41`
+- **AWS CDK**: version `2.170.0`
 
-# Setup Instructions
+---
 
-- Clone Repo
+## 🚀 Let's Get Started!
 
-```git clone $repo-link```
+### Step 1: Initial Setup
 
-- Traverse to CDK Folder
-```cd BCO/CDK```
+1. **🍴 Fork the Repository**
+   - Go to the repository on GitHub and click the **Fork** button in the top-right corner.
 
-- Deploy using the CDK as follows
+2. **🔐 Create a Personal Access Token (PAT)**
+   - Navigate to **Settings** in GitHub.
+   - Scroll down to **Developer Settings**.
+   - Click **Personal Access Tokens**, and select **Tokens (classic)**.
+   - Click **Generate New Token (classic)**.
+   - Add a note like `BCO_Chatbot` to identify the token.
+   - Set an expiration period that suits your needs.
+   - Select the following scopes:
+     - **repo** (Full control of private repositories)
+     - **repo_hook** (Manage webhooks)
+   - Click **Generate Token** and **store it securely** for later use.
+
+---
+
+## 🔧 Step 2: Setup Instructions
+
+1. **📂 Clone the Forked Repository**
+   ```bash
+   git clone <your-forked-repo-link>
+
+
+
+2. **📁 Navigate to the CDK Folder**
+```bash
+cd BCO/CDK
 ```
+
+3. **📦 Deploy the Application Using CDK**
+```bash
 cdk bootstrap -c githubToken=$stored-github-token
 cdk synth -c githubToken=$stored-github-token
 cdk deploy -c githubToken=$stored-github-token
 ```
+# 🏁 Almost There!
 
-# Post-Deployment Instructions
+## Post-Deployment Instructions
 
-- Go to the created amplify app in AWS Console
-- Choose Start Migration option upon receiving a popup
-- Choose Configure Github App and complete Installation
-- Choose the app and click Run Job
-- After the Deployment is completed, Click the domain Link
+1. **🔍 Access the Amplify App in the AWS Console**
+   - Navigate to the **Amplify** service in your AWS Management Console.
+   - Find and select the newly created **BCO Chatbot** app.
 
-# Congratulations!! You've Deployed the BCO Chatbot! 
+2. **🚀 Start the GitHub App Migration**
+   - If prompted with a migration popup, click **Start Migration** to begin the setup process.
+   - This ensures proper GitHub integration for continuous deployment.
+
+3. **🔧 Configure the GitHub App**
+   - Follow the steps to configure the **GitHub App** for your repository.
+   - Complete the installation by selecting your repository and authorizing access.
+
+4. **🏗️ Run the Amplify Build Job**
+   - After configuring the GitHub App, return to the Amplify console.
+   - Select your app, and click **Run Job** to trigger the deployment pipeline.
+   - The job will build and deploy your chatbot automatically.
+
+5. **🌐 Access Your Deployed Chatbot**
+   - Once the deployment is completed, Amplify will provide a **domain link**.
+   - Click the link to access your live **BCO Chatbot**.
+
+---
+
+# 🎉 Congratulations!!
+
+Your **BCO Chatbot** has been successfully deployed! You can now explore your chatbot and start using it for breast cancer awareness and support.
+
