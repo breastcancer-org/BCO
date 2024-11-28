@@ -3,6 +3,7 @@ import json
 import logging
 from botocore.exceptions import ClientError
 import os
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -11,7 +12,8 @@ bedrock_runtime = boto3.client(service_name='bedrock-runtime')
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ.get('TABLE_NAME'))
-S3_BUCKET_NAME = 'bco_bedrock_logs'
+s3_client = boto3.client('s3')
+S3_BUCKET_NAME = os.environ.get('BUCKET_NAME')
 
 class BCO_API:
     
@@ -95,11 +97,21 @@ class BCO_API:
     
         
         response = bedrock_runtime.invoke_model(body=body, modelId=model_id)
-        
-        # self.configure_logging()
+
+        timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H-%M-%SZ')
+        s3_key = f'bedrock-outputs/output-{timestamp}.json'
         
         response_body = json.loads(response.get('body').read())
-       
+        response_json = json.dumps(response_body)
+        s3_response_body = response_json.encode('utf-8')
+
+        s3_client.put_object(
+            Bucket=S3_BUCKET_NAME,
+            Key=s3_key,
+            Body=s3_response_body,
+            ContentType='application/json'
+        )
+
         return response_body
     
     

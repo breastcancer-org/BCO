@@ -8,7 +8,7 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as apigatewayv2 from 'aws-cdk-lib/aws-apigatewayv2';
 import * as apigatewayv2integrations from 'aws-cdk-lib/aws-apigatewayv2-integrations';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
 
 interface CdkstackProps extends cdk.StackProps {
@@ -70,6 +70,12 @@ export class CdkStack extends cdk.Stack {
 
     amplifyApp.addBranch('main');
     
+    const log_bucket = new s3.Bucket(this, 'BCOBucket', {
+      bucketName: 'bco-bedrock-logging',  // Customize this to be unique
+      versioned: false,  // Enable versioning
+      removalPolicy: cdk.RemovalPolicy.DESTROY,  // Automatically delete the bucket when the stack is deleted
+      autoDeleteObjects: true  // Automatically delete all objects in the bucket when it's destroyed
+    });
 
     const table = new dynamodb.Table(this, 'BCO_Users', {
       partitionKey: { name: 'email', type: dynamodb.AttributeType.STRING }
@@ -103,7 +109,8 @@ export class CdkStack extends cdk.Stack {
       code: lambda.Code.fromAsset('Lambda'), // Path to the lambda function folder
       handler: 'bedrockAPI.lambda_handler',  // The entry point function within the file (e.g., exports.handler in api.js)
       environment: {
-        TABLE_NAME: table.tableName, // Pass the DynamoDB table name to the Lambda function
+        TABLE_NAME: table.tableName,
+        BUCKET_NAME: log_bucket.bucketName // Pass the DynamoDB table name to the Lambda function
       },
       timeout: cdk.Duration.seconds(60),
     });
@@ -250,6 +257,7 @@ export class CdkStack extends cdk.Stack {
     amplifyApp.addEnvironment('REACT_APP_USER_POOL_CLIENT_ID', userPoolClient.userPoolClientId);
     amplifyApp.addEnvironment('REACT_APP_COGNITO_DOMAIN', cognitoDomainUrl);
 
+
     // Output User Pool ID and Client ID
     new cdk.CfnOutput(this, 'UserPoolId', {
       value: userPool.userPoolId,
@@ -266,5 +274,8 @@ export class CdkStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'AmplifyAppDomain',{
       value: amplifyApp.defaultDomain
     });
+    new cdk.CfnOutput(this, 's3bucket', {
+      value: log_bucket.bucketName
+    })
   }
 }
