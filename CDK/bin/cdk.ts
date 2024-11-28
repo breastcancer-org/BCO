@@ -5,6 +5,8 @@ import { CdkStack } from '../lib/cdk-stack';
 const app = new cdk.App();
 
 const githubToken = app.node.tryGetContext('githubToken');
+const githubOwner = app.node.tryGetContext('githubOwner') || 'ASUCICREPO';
+
 if (!githubToken) {
   throw new Error('GitHub token must be provided. Use -c githubToken=<your-token> when deploying.');
 }
@@ -20,7 +22,8 @@ new CdkStack(app, 'CdkStack', {
     account: process.env.CDK_DEFAULT_ACCOUNT, 
     region: process.env.CDK_DEFAULT_REGION 
   },
-  githubToken: githubToken
+  githubToken: githubToken,
+  githubOwner: githubOwner
 
   /* Uncomment the next line if you know exactly what Account and Region you
    * want to deploy the stack to. */

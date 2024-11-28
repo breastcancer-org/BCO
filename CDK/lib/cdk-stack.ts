@@ -13,6 +13,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 
 interface CdkstackProps extends cdk.StackProps {
   githubToken: string;
+  githubOwner: string;
 }
 
 export class CdkStack extends cdk.Stack {
@@ -27,7 +28,7 @@ export class CdkStack extends cdk.Stack {
 
     const amplifyApp = new amplify.App(this, 'bco-amplify-app', {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
-        owner: 'ASUCICREPO',
+        owner: props.githubOwner,
         repository: 'BCO',
         oauthToken: githubToken.secretValue
       }),
