@@ -52,9 +52,9 @@ cd BCO/CDK
 
 3. **📦 Deploy the Application Using CDK**
 ```bash
-cdk bootstrap -c githubToken=$stored-github-token
-cdk synth -c githubToken=$stored-github-token
-cdk deploy -c githubToken=$stored-github-token
+cdk bootstrap -c githubToken=$stored-github-token githubOwner=$github-owner-of-repo
+cdk synth -c githubToken=$stored-github-token githubOwner=$github-owner-of-repo
+cdk deploy -c githubToken=$stored-github-token githubOwner=$github-owner-of-repo
 ```
 # 🏁 Almost There!
 
