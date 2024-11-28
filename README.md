@@ -9,6 +9,11 @@ Ensure that the following tools are installed before proceeding:
 - **AWS CLI**: version `2.15.41`
 - **AWS CDK**: version `2.170.0`
 
+```
+npm install
+sudo npm install -g aws-cdk
+```
+
 ---
 
 ## 🚀 Let's Get Started!
