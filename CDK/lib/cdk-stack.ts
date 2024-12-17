@@ -71,7 +71,7 @@ export class CdkStack extends cdk.Stack {
     amplifyApp.addBranch('main');
     
     const log_bucket = new s3.Bucket(this, 'BCOBucket', {
-      bucketName: 'bco-bedrock-logging',  // Customize this to be unique
+      bucketName: 'bco-bedrock-logging-bco-chatbot',  // Customize this to be unique
       versioned: false,  // Enable versioning
       removalPolicy: cdk.RemovalPolicy.DESTROY,  // Automatically delete the bucket when the stack is deleted
       autoDeleteObjects: true  // Automatically delete all objects in the bucket when it's destroyed
@@ -180,14 +180,14 @@ export class CdkStack extends cdk.Stack {
       },
     });
 
-    const UserPoolDomain = userPool.addDomain('UserPoolDomain', {
+    const UserPoolDomain = userPool.addDomain('UserPoolDomainChatbot', {
       cognitoDomain: {
-        domainPrefix: 'bco-user-pool'
+        domainPrefix: 'bco-user-pool-chatbot'
       }
     });
 
     // Add a User Pool Client
-    const userPoolClient = new cognito.UserPoolClient(this, 'UserPoolClient', {
+    const userPoolClient = new cognito.UserPoolClient(this, 'UserPoolClientChatbbot', {
       userPool,
     });
 

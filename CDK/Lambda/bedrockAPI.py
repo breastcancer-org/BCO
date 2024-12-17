@@ -126,7 +126,7 @@ class BCO_API:
     
         try:
     
-            model_id = 'anthropic.claude-3-sonnet-20240229-v1:0'
+            model_id = 'anthropic.claude-3-5-sonnet-20240620-v1:0'
             max_tokens = 1000
             
             if len(self.ChatHistory)<1 or isinstance(self.ChatHistory, str):
